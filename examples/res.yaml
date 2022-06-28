@@ -1,0 +1,244 @@
+[
+   {
+      "apiVersion": "v1",
+      "kind": "Namespace",
+      "metadata": {
+         "name": "cdp-docs"
+      }
+   },
+   {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "metadata": {
+         "labels": {
+            "app": "gqlgen-service"
+         },
+         "name": "gqlgen-service",
+         "namespace": "cdp-docs"
+      },
+      "spec": {
+         "replicas": 1,
+         "selector": {
+            "matchLabels": {
+               "app": "gqlgen-service"
+            }
+         },
+         "template": {
+            "metadata": {
+               "labels": {
+                  "app": "gqlgen-service"
+               }
+            },
+            "spec": {
+               "containers": [
+                  {
+                     "image": "gqlgen-service:latest",
+                     "imagePullPolicy": "IfNotPresent",
+                     "name": "gqlgen-service"
+                  }
+               ]
+            }
+         }
+      }
+   },
+   {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "metadata": {
+         "labels": {
+            "app": "graph-gophers-service"
+         },
+         "name": "graph-gophers-service",
+         "namespace": "cdp-docs"
+      },
+      "spec": {
+         "replicas": 1,
+         "selector": {
+            "matchLabels": {
+               "app": "graph-gophers-service"
+            }
+         },
+         "template": {
+            "metadata": {
+               "labels": {
+                  "app": "graph-gophers-service"
+               }
+            },
+            "spec": {
+               "containers": [
+                  {
+                     "image": "graph-gophers-service:latest",
+                     "imagePullPolicy": "IfNotPresent",
+                     "name": "graph-gophers-service"
+                  }
+               ]
+            }
+         }
+      }
+   },
+   {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "metadata": {
+         "labels": {
+            "app": "nodejs-service"
+         },
+         "name": "nodejs-service",
+         "namespace": "cdp-docs"
+      },
+      "spec": {
+         "replicas": 1,
+         "selector": {
+            "matchLabels": {
+               "app": "nodejs-service"
+            }
+         },
+         "template": {
+            "metadata": {
+               "labels": {
+                  "app": "nodejs-service"
+               }
+            },
+            "spec": {
+               "containers": [
+                  {
+                     "image": "nodejs-service:latest",
+                     "imagePullPolicy": "IfNotPresent",
+                     "name": "nodejs-service"
+                  }
+               ]
+            }
+         }
+      }
+   },
+   {
+      "apiVersion": "v1",
+      "kind": "Service",
+      "metadata": {
+         "name": "gqlgen-service",
+         "namespace": "cdp-docs"
+      },
+      "spec": {
+         "ports": [
+            {
+               "name": "http",
+               "port": 8080,
+               "targetPort": 8080
+            }
+         ],
+         "selector": {
+            "app": "gqlgen-service"
+         },
+         "type": "ClusterIP"
+      }
+   },
+   {
+      "apiVersion": "v1",
+      "kind": "Service",
+      "metadata": {
+         "name": "graph-gophers-service",
+         "namespace": "cdp-docs"
+      },
+      "spec": {
+         "ports": [
+            {
+               "name": "http",
+               "port": 8080,
+               "targetPort": 8080
+            }
+         ],
+         "selector": {
+            "app": "graph-gophers-service"
+         },
+         "type": "ClusterIP"
+      }
+   },
+   {
+      "apiVersion": "v1",
+      "kind": "Service",
+      "metadata": {
+         "name": "nodejs-service",
+         "namespace": "cdp-docs"
+      },
+      "spec": {
+         "ports": [
+            {
+               "name": "http",
+               "port": 8080,
+               "targetPort": 8080
+            }
+         ],
+         "selector": {
+            "app": "nodejs-service"
+         },
+         "type": "ClusterIP"
+      }
+   },
+   {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "metadata": {
+         "labels": {
+            "app": "bramble"
+         },
+         "name": "bramble",
+         "namespace": "cdp-docs"
+      },
+      "spec": {
+         "replicas": 1,
+         "selector": {
+            "matchLabels": {
+               "app": "bramble"
+            }
+         },
+         "template": {
+            "metadata": {
+               "labels": {
+                  "app": "bramble"
+               }
+            },
+            "spec": {
+               "containers": [
+                  {
+                     "args": [
+                        "-config",
+                        "/config/config.json"
+                     ],
+                     "commands": [
+                        "/bramble"
+                     ],
+                     "image": "ghcr.io/movio/bramble:v1.4.1",
+                     "imagePullPolicy": "IfNotPresent",
+                     "name": "bramble",
+                     "volumeMounts": [
+                        {
+                           "mountPath": "/config",
+                           "name": "bramble-cfg"
+                        }
+                     ]
+                  }
+               ],
+               "volumes": [
+                  {
+                     "configmap": {
+                        "configmapName": "bramble-cfg"
+                     },
+                     "name": "cfg"
+                  }
+               ]
+            }
+         }
+      }
+   },
+   {
+      "apiVersion": "v1",
+      "data": {
+         "description": "The Tom Collins is essentially gin and\nlemonade.  The bitters add complexity.\n"
+      },
+      "kind": "ConfigMap",
+      "metadata": {
+         "name": "bramble-cfg",
+         "namespace": "cdp-docs"
+      }
+   }
+]
