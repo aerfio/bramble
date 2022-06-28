@@ -21,6 +21,7 @@ type Query {
 
   # give me a Foo object
   randomFoo: Foo!
+  bar(id: ID!): Bar @boundary
 }
 
 type Foo @boundary {
@@ -30,4 +31,9 @@ type Foo @boundary {
 
   # A field provided by this service
   gqlgen: Boolean!
+}
+
+type Bar @boundary {
+  id: ID!
+  additionalField: String
 }

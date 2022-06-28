@@ -14,6 +14,20 @@ class Foo {
   }
 }
 
+const bars = [{
+  data: 111,
+  id: "1"
+}, {
+  data: 222,
+  id: "2"
+}, {
+  data: 333,
+  id: "3"
+}, {
+  data: 444,
+  id: "4"
+},]
+
 async function setup() {
   let schemaSource = await fs.readFile("schema.graphql", "utf-8");
   let schema = buildSchema(schemaSource);
@@ -24,7 +38,26 @@ async function setup() {
       version: "1.0.0",
       schema: schemaSource,
     },
-    foo: (args) => Foo.get(args.id),
+    foo: (args) => {
+      return Foo.get(args.id)
+    },
+    bar: (arg) => {
+      console.log("bar", arg)
+      const out = bars.find((val) => {
+        return val.id === arg.id;
+      })
+      console.log(out)
+      return out
+    },
+    gimmeBar: (arg) => {
+      console.log("gimme", arg)
+      const out = bars.find((val) => {
+        console.log("val, arg", val, arg)
+        return val.id === arg.id;
+      })
+      console.log("out", out)
+      return out
+    },
   };
 
   let app = express();

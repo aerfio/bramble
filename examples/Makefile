@@ -1,3 +1,6 @@
+.PHONY: all
+all: container-images kind-start kind-load-images apply-resources
+
 .PHONY: docker-%
 docker-%:
 	cd "$*" && docker buildx build -t "$*:latest" .
@@ -11,7 +14,7 @@ kind-start:
 
 .PHONY: kind-load-images
 kind-load-images:
-	kind load docker-image gqlgen-service:latest graph-gophers-service:latest nodejs-service:latest -v=3
+	kind load docker-image gqlgen-service:latest graph-gophers-service:latest nodejs-service:latest
 
 .PHONY: apply-resources
 apply-resources:

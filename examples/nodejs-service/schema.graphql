@@ -18,7 +18,16 @@ type Query {
 
   # example Foo type
   foo(id: ID!): Foo @boundary
+
+  bar(id: ID!): Bar @boundary
+  gimmeBar(id: ID!): Bar!
 }
+
+type Bar @boundary {
+  id: ID!
+  data: Int!
+}
+
 
 type Foo @boundary {
   # required by all services that add a field to
@@ -28,3 +37,13 @@ type Foo @boundary {
   # A field provided by this service
   nodejs: Boolean!
 }
+
+
+# getSession(imsi: 123456){
+#    imsi
+#    policy
+#    nwi
+#    ipFix {
+#      enabled
+#    }
+#  }

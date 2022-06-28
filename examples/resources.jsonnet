@@ -1,4 +1,4 @@
-local namespace = 'cdp-docs';
+local namespace = 'bramble';
 
 local deploy(name) = {
   kind: 'Deployment',
@@ -37,7 +37,7 @@ local deploy(name) = {
 };
 
 
-local svc(name) = {
+local svc(name, targetPort=8080) = {
   apiVersion: 'v1',
   kind: 'Service',
   metadata: {
@@ -49,7 +49,7 @@ local svc(name) = {
       {
         name: 'http',
         port: 8080,
-        targetPort: 8080,
+        targetPort: targetPort,
       },
     ],
     selector: {
@@ -106,6 +106,12 @@ local svc(name) = {
       },
     },
   },
+  svc('bramble'),
+  svc('bramble', 8081) + {
+    metadata+: {
+      name: 'bramble-admin',
+    },
+  },
   {
     kind: 'ConfigMap',
     apiVersion: 'v1',
@@ -114,10 +120,71 @@ local svc(name) = {
       namespace: namespace,
     },
     data: {
-      description: |||
-        The Tom Collins is essentially gin and
-        lemonade.  The bitters add complexity.
+      'config.json': |||
+        {
+            "services": [
+                "http://gqlgen-service:8080/query",
+                "http://graph-gophers-service:8080/query",
+                "http://nodejs-service:8080/query"
+            ],
+            "gateway-port": 8080,
+            "private-port": 8081,
+            "plugins": [
+                {
+                    "name": "playground"
+                },
+                {
+                    "name": "admin-ui"
+                }
+            ]
+        }
       |||,
     },
   },
+  {
+    apiVersion: 'networking.k8s.io/v1',
+    kind: 'Ingress',
+    metadata: {
+      name: 'bramble',
+      namespace: namespace,
+      annotations: {
+
+      },
+    },
+    spec: {
+      rules: [
+        {
+          http: {
+            paths: [
+              {
+                pathType: 'Prefix',
+                path: '/',
+                backend: {
+                  service: {
+                    name: 'bramble',
+                    port: {
+                      number: 8080,
+                    },
+                  },
+                },
+              },
+              {
+                pathType: 'Prefix',
+                path: '/admin',
+                backend: {
+                  service: {
+                    name: 'bramble-admin',
+                    port: {
+                      number: 8080,
+                    },
+                  },
+                },
+              },
+            ],
+          },
+        },
+      ],
+    },
+  },
+
 ]

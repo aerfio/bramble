@@ -1,0 +1,17 @@
+{
+    "services": [
+        "http://localhost:8080/query",
+        "http://localhost:8081/query",
+        "http://localhost:8082/query"
+    ],
+    "gateway-port": 8083,
+    "private-port": 8084,
+    "plugins": [
+        {
+            "name": "playground"
+        },
+        {
+            "name": "admin-ui"
+        }
+    ]
+}
