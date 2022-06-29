@@ -15,35 +15,17 @@ type Query {
   # The service query is used by the gateway when
   # the service is first registered
   service: Service!
-
-  # example Foo type
-  foo(id: ID!): Foo @boundary
-
-  bar(id: ID!): Bar @boundary
-  gimmeBar(id: ID!): Bar!
+  session(id: ID!): Session @boundary
 }
 
-type Bar @boundary {
+type Session @boundary {
   id: ID!
-  data: Int!
+  policy: String!
+  nwi: String!
+  ipfff: String
+  ipfix: IPFix!
 }
 
-
-type Foo @boundary {
-  # required by all services that add a field to
-  # the Foo type
-  id: ID!
-
-  # A field provided by this service
-  nodejs: Boolean!
+type IPFix {
+  enabled: Boolean!
 }
-
-
-# getSession(imsi: 123456){
-#    imsi
-#    policy
-#    nwi
-#    ipFix {
-#      enabled
-#    }
-#  }

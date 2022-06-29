@@ -2,31 +2,9 @@ var express = require("express");
 var { graphqlHTTP } = require('express-graphql');
 var { buildSchema } = require("graphql");
 var fs = require("fs").promises;
+const bodyParser = require("body-parser")
 
 const defaultPort = 8080;
-class Foo {
-  constructor(id) {
-    this.id = id;
-    this.nodejs = true;
-  }
-  static get(id) {
-    return new Foo(id);
-  }
-}
-
-const bars = [{
-  data: 111,
-  id: "1"
-}, {
-  data: 222,
-  id: "2"
-}, {
-  data: 333,
-  id: "3"
-}, {
-  data: 444,
-  id: "4"
-},]
 
 async function setup() {
   let schemaSource = await fs.readFile("schema.graphql", "utf-8");
@@ -38,29 +16,27 @@ async function setup() {
       version: "1.0.0",
       schema: schemaSource,
     },
-    foo: (args) => {
-      return Foo.get(args.id)
-    },
-    bar: (arg) => {
-      console.log("bar", arg)
-      const out = bars.find((val) => {
-        return val.id === arg.id;
-      })
-      console.log(out)
-      return out
-    },
-    gimmeBar: (arg) => {
-      console.log("gimme", arg)
-      const out = bars.find((val) => {
-        console.log("val, arg", val, arg)
-        return val.id === arg.id;
-      })
-      console.log("out", out)
-      return out
-    },
+    session: (arg) => {
+      console.log(arg)
+      return {
+        id: arg.id,
+        policy: `${arg.id}-policy`,
+        nwi: "some-nwi",
+        ipfix: {
+          enabled: arg.id === "123456"
+        },
+        ipfff: arg.id === "123457" ? "ipfff" : null
+      }
+    }
   };
 
   let app = express();
+  app.use(bodyParser());
+  app.use((req, res, next) => {
+    console.log(req.body); // this is what you want
+
+    next()
+  });
   app.use(
     "/query",
     graphqlHTTP({

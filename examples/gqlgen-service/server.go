@@ -7,6 +7,7 @@ import (
 	"log"
 	"math/rand"
 	"net/http"
+	"net/http/httputil"
 	"os"
 	"time"
 
@@ -32,7 +33,15 @@ func main() {
 	c.Directives.Boundary = func(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error) {
 		return next(ctx)
 	}
-	http.Handle("/query", handler.GraphQL(NewExecutableSchema(c)))
+	http.Handle("/query", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		dump, err := httputil.DumpRequest(r, true)
+		if err != nil {
+			http.Error(w, fmt.Sprint(err), http.StatusInternalServerError)
+			return
+		}
+		log.Default().Printf("%s\n", dump)
+		handler.GraphQL(NewExecutableSchema(c)).ServeHTTP(w, r)
+	}))
 	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, "OK")
 	})

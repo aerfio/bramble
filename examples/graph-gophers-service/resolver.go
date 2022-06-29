@@ -1,9 +1,5 @@
 package main
 
-import (
-	"github.com/graph-gophers/graphql-go"
-)
-
 type service struct {
 	Name    string
 	Version string
@@ -11,8 +7,7 @@ type service struct {
 }
 
 type foo struct {
-	ID           graphql.ID
-	GraphGophers bool
+	Field1 string
 }
 
 type resolver struct {
@@ -29,11 +24,8 @@ func newResolver() *resolver {
 	}
 }
 
-func (r *resolver) Foo(args struct {
-	ID graphql.ID
-}) (*foo, error) {
+func (r *resolver) Foo() (*foo, error) {
 	return &foo{
-		ID:           args.ID,
-		GraphGophers: true,
+		Field1: "some field1",
 	}, nil
 }

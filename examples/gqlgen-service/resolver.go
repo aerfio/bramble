@@ -2,14 +2,10 @@ package main
 
 import (
 	"context"
-	"fmt"
-	"math/rand"
-	"strconv"
+	"log"
 	"strings"
 
 	"github.com/vektah/gqlparser/v2/formatter"
-	"github.com/vektah/gqlparser/v2/gqlerror"
-	"k8s.io/utils/pointer"
 )
 
 type Resolver struct{}
@@ -20,24 +16,33 @@ func (r *Resolver) Query() QueryResolver {
 
 type queryResolver struct{ *Resolver }
 
-// Bar implements QueryResolver
-func (*queryResolver) Bar(ctx context.Context, id string) (*Bar, error) {
-	fmt.Println(id)
-	if id == "1" {
-		return &Bar{
-			ID:              id,
-			AdditionalField: pointer.String("SomeAdditionalField"),
-		}, nil
-	}
-	if id == "2" {
-		return &Bar{
-			ID: id,
-		}, nil
-	}
-	return nil, gqlerror.Errorf("some err lol")
+// SessionForImsi implements QueryResolver
+func (qr *queryResolver) SessionForImsi(ctx context.Context, imsi string) (*Session, error) {
+	log.Println(imsi)
+	return qr.Session(ctx, imsi)
 }
 
 var _ QueryResolver = &queryResolver{}
+
+// Session implements QueryResolver
+func (*queryResolver) Session(ctx context.Context, id string) (*Session, error) {
+	log.Println(id)
+	if id == "123456" {
+		return &Session{
+			ID:   id,
+			Imsi: id,
+		}, nil
+	}
+	return &Session{
+		ID:           id,
+		Imsi:         id,
+		SomeImsiData: ptr("Some Additional Data"),
+	}, nil
+}
+
+func ptr[T any](arg T) *T {
+	return &arg
+}
 
 func (r *queryResolver) Service(ctx context.Context) (*Service, error) {
 	s := new(strings.Builder)
@@ -51,21 +56,4 @@ func (r *queryResolver) Service(ctx context.Context) (*Service, error) {
 		Schema:  s.String(),
 	}
 	return &service, nil
-}
-
-func (r *queryResolver) Foo(ctx context.Context, id string) (*Foo, error) {
-	foo := Foo{
-		ID:     id,
-		Gqlgen: true,
-	}
-	return &foo, nil
-}
-
-func (r *queryResolver) RandomFoo(ctx context.Context) (*Foo, error) {
-	id := strconv.Itoa(rand.Intn(100))
-	foo := Foo{
-		ID:     id,
-		Gqlgen: true,
-	}
-	return &foo, nil
 }

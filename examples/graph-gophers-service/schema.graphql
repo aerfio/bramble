@@ -1,5 +1,3 @@
-directive @boundary on OBJECT | FIELD_DEFINITION
-
 type Service {
   name: String!
   version: String!
@@ -7,11 +5,10 @@ type Service {
 }
 
 type Query {
-  foo(id: ID!): Foo @boundary
   service: Service!
+  foo: Foo!
 }
 
-type Foo @boundary {
-  id: ID!
-  graphGophers: Boolean!
+type Foo {
+  field1: String!
 }

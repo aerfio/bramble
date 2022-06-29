@@ -1,11 +1,10 @@
 module github.com/movio/bramble/examples/gqlgen-server
 
-go 1.17
+go 1.18
 
 require (
 	github.com/99designs/gqlgen v0.16.0
 	github.com/vektah/gqlparser/v2 v2.3.1
-	k8s.io/utils v0.0.0-20220210201930-3a6ce19ff2f9
 )
 
 require (

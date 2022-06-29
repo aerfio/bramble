@@ -16,24 +16,14 @@ type Query {
   # the service is first registered
   service: Service!
 
-  # example Foo type
-  foo(id: ID!): Foo @boundary
-
-  # give me a Foo object
-  randomFoo: Foo!
-  bar(id: ID!): Bar @boundary
+  # getSession(imsi: Int!) Session
+  session(id: ID!): Session @boundary
+  sessionForImsi(imsi: ID!): Session
 }
 
-type Foo @boundary {
-  # required by all services that add a field to
-  # the Foo type
+type Session @boundary {
   id: ID!
-
-  # A field provided by this service
-  gqlgen: Boolean!
+  imsi: ID!
+  someImsiData: String
 }
 
-type Bar @boundary {
-  id: ID!
-  additionalField: String
-}
