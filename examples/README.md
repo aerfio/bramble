@@ -1,20 +1,7 @@
 # Example
 
-To start example run:
-```bash
-cd nodejs-service && npm install && cd ..
-cd gqlgen-service && make generate && cd ..
-```
-Next run those commands in 3 different terminal tabs:
-- `cd gqlgen-service && PORT=8080 go run .`
-- `cd nodejs-service && PORT=8081 npm start`
-- `cd graph-gophers-service && PORT=8082 go run .`
-
-Finally run Bramble:
-```bash
-cd .. # go to the root of repo
-go run ./cmd/bramble/main.go -conf ./examples/cfg.json
-```
+To start example please read [Running locally](../README.md#running-locally) section of root `README.md` file.
+Then go to `http://localhost:8082/playground` or `http://localhost:8083/admin` - additional plugins than enable those views have been additionally enabled.
 
 # Kubernetes deploy
 

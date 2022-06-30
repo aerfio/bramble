@@ -1,0 +1,15 @@
+{
+  "services": [
+    "http://gqlgen-server:8080/query",
+    "http://gophers-server:8080/query",
+    "http://nodejs-server:8080/query"
+  ],
+  "plugins": [
+    {
+      "name": "playground"
+    },
+    {
+      "name": "admin-ui"
+    }
+  ]
+}

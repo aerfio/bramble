@@ -2,7 +2,6 @@ var express = require("express");
 var { graphqlHTTP } = require('express-graphql');
 var { buildSchema } = require("graphql");
 var fs = require("fs").promises;
-const bodyParser = require("body-parser")
 
 const defaultPort = 8080;
 
@@ -31,10 +30,9 @@ async function setup() {
   };
 
   let app = express();
-  app.use(bodyParser());
+  app.use(express.json());
   app.use((req, res, next) => {
-    console.log(req.body); // this is what you want
-
+    console.log(`Path: ${req.path}, headers: ${JSON.stringify(req.headers)}, body: ${JSON.stringify(req.body)}`)
     next()
   });
   app.use(

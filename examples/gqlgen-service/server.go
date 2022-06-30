@@ -39,7 +39,7 @@ func main() {
 			http.Error(w, fmt.Sprint(err), http.StatusInternalServerError)
 			return
 		}
-		log.Default().Printf("%s\n", dump)
+		log.Printf("%s\n", dump)
 		handler.GraphQL(NewExecutableSchema(c)).ServeHTTP(w, r)
 	}))
 	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
